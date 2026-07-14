@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Halide Studio — Photography</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bone: #F2F0EC;
+    --ink: #1A1A1A;
+    --brass: #A8875C;
+    --gray: #8A8580;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: var(--bone);
+    color: var(--ink);
+    font-family: 'Inter', sans-serif;
+    font-weight: 300;
+    line-height: 1.7;
+  }
+  h1, h2, h3 { font-family: 'Cormorant Garamond', serif; font-weight: 500; }
+  .wrap { max-width: 980px; margin: 0 auto; padding: 0 24px; }
+
+  nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 40px 24px;
+    max-width: 980px;
+    margin: 0 auto;
+  }
+  .logo { font-family: 'Cormorant Garamond', serif; font-size: 24px; letter-spacing: 0.06em; }
+  .nav-link {
+    color: var(--ink);
+    font-size: 13px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    text-decoration: none;
+    border-bottom: 1px solid var(--brass);
+    padding-bottom: 3px;
+  }
+
+  .hero {
+    padding: 60px 24px 90px;
+    text-align: center;
+  }
+  .hero .eyebrow {
+    color: var(--brass);
+    font-size: 13px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    margin-bottom: 24px;
+  }
+  .hero h1 {
+    font-size: clamp(42px, 7vw, 78px);
+    line-height: 1.1;
+    max-width: 760px;
+    margin: 0 auto;
+    font-style: italic;
+  }
+  .hero p {
+    color: var(--gray);
+    font-size: 17px;
+    max-width: 440px;
+    margin: 28px auto 0;
+    font-weight: 400;
+  }
+  .hero-cta {
+    display: inline-block;
+    margin-top: 36px;
+    color: var(--ink);
+    font-size: 13px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    text-decoration: none;
+    border-bottom: 1px solid var(--brass);
+    padding-bottom: 5px;
+  }
+
+  .hero-image {
+    max-width: 980px;
+    margin: 0 auto;
+    padding: 0 24px;
+  }
+  .hero-image .frame {
+    width: 100%;
+    height: 480px;
+    overflow: hidden;
+    border-radius: 2px;
+  }
+  .hero-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    filter: grayscale(20%) sepia(10%) contrast(1.05);
+  }
+
+  .portfolio-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    max-width: 980px;
+    margin: 0 auto;
+  }
+  .portfolio-grid .item {
+    overflow: hidden;
+    border-radius: 2px;
+  }
+  .portfolio-grid .item.tall { grid-row: span 2; }
+  .portfolio-grid img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    filter: grayscale(20%) sepia(10%) contrast(1.05);
+    transition: filter 0.3s ease;
+  }
+  @media (max-width: 700px) {
+    .portfolio-grid { grid-template-columns: 1fr 1fr; }
+    .hero-image .frame { height: 320px; }
+  }
+
+  .filmstrip {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    justify-content: center;
+    padding: 10px 0 60px;
+  }
+  .filmstrip .line { flex: 1; max-width: 200px; height: 1px; background: rgba(26,26,26,0.15); }
+  .filmstrip .dot { width: 5px; height: 5px; background: var(--brass); border-radius: 1px; }
+
+  section { padding: 60px 0; }
+  .section-head { text-align: center; margin-bottom: 56px; }
+  .eyebrow-c {
+    color: var(--brass);
+    font-size: 13px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    margin-bottom: 16px;
+  }
+  .section-head h2 { font-size: clamp(30px, 4vw, 42px); font-style: italic; }
+
+  .philosophy {
+    max-width: 620px;
+    margin: 0 auto;
+    text-align: center;
+    font-size: 19px;
+    color: #4A4640;
+    font-weight: 400;
+  }
+
+  .services-list {
+    max-width: 700px;
+    margin: 0 auto;
+  }
+  .service-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    padding: 26px 0;
+    border-bottom: 1px solid rgba(26,26,26,0.1);
+  }
+  .service-row:first-child { border-top: 1px solid rgba(26,26,26,0.1); }
+  .service-row .num { font-family: 'Cormorant Garamond', serif; font-size: 16px; color: var(--brass); margin-right: 20px; }
+  .service-row .name { font-family: 'Cormorant Garamond', serif; font-size: 24px; flex: 1; }
+  .service-row .desc { color: var(--gray); font-size: 14px; max-width: 260px; text-align: right; }
+
+  .testimonials { background: #EAE7E0; }
+  .testi-single {
+    max-width: 640px;
+    margin: 0 auto;
+    text-align: center;
+  }
+  .testi-single p {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 26px;
+    font-style: italic;
+    line-height: 1.5;
+    color: #2A2622;
+  }
+  .testi-single .who {
+    margin-top: 20px;
+    color: var(--brass);
+    font-size: 13px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+
+  .inquiry-box {
+    max-width: 520px;
+    margin: 0 auto;
+  }
+  .inquiry-box h2 { text-align: center; font-size: 32px; margin-bottom: 8px; font-style: italic; }
+  .inquiry-box > p { text-align: center; color: var(--gray); margin-bottom: 36px; font-size: 15px; }
+  .field { margin-bottom: 22px; }
+  .field label {
+    display: block;
+    font-size: 12px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--gray);
+    margin-bottom: 8px;
+  }
+  .field input, .field select {
+    width: 100%;
+    background: transparent;
+    border: none;
+    border-bottom: 1px solid rgba(26,26,26,0.25);
+    padding: 10px 0;
+    font-family: 'Inter', sans-serif;
+    font-size: 16px;
+    color: var(--ink);
+  }
+  .field input:focus, .field select:focus { outline: none; border-color: var(--brass); }
+  .field input.error, .field select.error { border-color: #B5544A; }
+  .err-msg { color: #B5544A; font-size: 12.5px; margin-top: 6px; display: none; }
+  .err-msg.show { display: block; }
+  .submit-row { text-align: center; margin-top: 30px; }
+  .btn-primary {
+    background: var(--ink);
+    color: var(--bone);
+    font-size: 13px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 15px 40px;
+    border: none;
+    cursor: pointer;
+  }
+  .success-box { display: none; text-align: center; }
+  .success-box.show { display: block; }
+  .success-box p.small { color: var(--gray); margin-top: 10px; font-size: 15px; }
+
+  footer {
+    text-align: center;
+    padding: 50px 24px 60px;
+    color: var(--gray);
+    font-size: 13px;
+    letter-spacing: 0.03em;
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="logo">Halide Studio</div>
+  <a href="#inquire" class="nav-link">Inquire</a>
+</nav>
+
+<section class="hero">
+  <div class="eyebrow">Portrait &amp; wedding photography</div>
+  <h1>Photographs that still feel true in twenty years.</h1>
+  <p>Quiet, editorial, unposed — documenting real moments instead of directing fake ones.</p>
+  <a href="#inquire" class="hero-cta">Inquire about your date</a>
+</section>
+
+<div class="hero-image">
+  <div class="frame">
+    <img src="https://picsum.photos/seed/halide-hero/1400/900" alt="Editorial portrait photography">
+  </div>
+</div>
+
+<div class="filmstrip">
+  <div class="dot"></div><div class="line"></div><div class="dot"></div>
+  <div class="line"></div><div class="dot"></div><div class="line"></div><div class="dot"></div>
+</div>
+
+<section>
+  <div class="wrap">
+    <div class="philosophy">
+      Every session starts the same way — with no direction at all. We follow light, not poses. The best photographs happen in the moment right before or after the one you were expecting.
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="section-head">
+      <div class="eyebrow-c">Services</div>
+      <h2>What we offer</h2>
+    </div>
+    <div class="services-list">
+      <div class="service-row">
+        <span class="num">01</span>
+        <span class="name">Portrait sessions</span>
+        <span class="desc">Individuals, couples, families. One hour, one location.</span>
+      </div>
+      <div class="service-row">
+        <span class="num">02</span>
+        <span class="name">Wedding coverage</span>
+        <span class="desc">Full day documentation, no shot list required.</span>
+      </div>
+      <div class="service-row">
+        <span class="num">03</span>
+        <span class="name">Editorial &amp; brand</span>
+        <span class="desc">Lifestyle imagery for small businesses and creatives.</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="section-head">
+      <div class="eyebrow-c">Recent work</div>
+      <h2>A few favorite frames</h2>
+    </div>
+    <div class="portfolio-grid">
+      <div class="item tall"><img src="https://picsum.photos/seed/halide-1/700/1000" alt="Portrait session"></div>
+      <div class="item"><img src="https://picsum.photos/seed/halide-2/700/480" alt="Wedding moment"></div>
+      <div class="item"><img src="https://picsum.photos/seed/halide-3/700/480" alt="Editorial detail"></div>
+      <div class="item tall"><img src="https://picsum.photos/seed/halide-4/700/1000" alt="Couple portrait"></div>
+    </div>
+  </div>
+</section>
+
+<section class="testimonials">
+  <div class="wrap">
+    <div class="testi-single">
+      <p>"We didn't feel photographed. We just forgot the camera was there — and that's exactly what's in every frame."</p>
+      <div class="who">— Marianne &amp; Cole, married last spring</div>
+    </div>
+  </div>
+</section>
+
+<section id="inquire">
+  <div class="wrap">
+    <div class="inquiry-box">
+      <div id="formView">
+        <h2>Start an inquiry</h2>
+        <p>Tell me a bit about what you're looking for.</p>
+        <form id="inquiryForm" novalidate>
+          <div class="field">
+            <label for="name">Name</label>
+            <input type="text" id="name" placeholder="Your name">
+            <div class="err-msg" id="err-name">Name is required.</div>
+          </div>
+          <div class="field">
+            <label for="email">Email</label>
+            <input type="email" id="email" placeholder="you@example.com">
+            <div class="err-msg" id="err-email">Enter a valid email address.</div>
+          </div>
+          <div class="field">
+            <label for="type">Session type</label>
+            <select id="type">
+              <option value="">Select a session type</option>
+              <option>Portrait</option>
+              <option>Wedding</option>
+              <option>Editorial / Brand</option>
+            </select>
+            <div class="err-msg" id="err-type">Please select a session type.</div>
+          </div>
+          <div class="field">
+            <label for="date">Preferred date</label>
+            <input type="text" id="date" placeholder="e.g. September 2026">
+            <div class="err-msg" id="err-date">Please share a preferred date.</div>
+          </div>
+          <div class="submit-row">
+            <button type="submit" class="btn-primary">Send inquiry</button>
+          </div>
+        </form>
+      </div>
+      <div class="success-box" id="successView">
+        <h2>Inquiry sent</h2>
+        <p class="small">I'll reply personally within two days.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  Halide Studio &mdash; based in the Pacific Northwest, available for travel.
+  <div style="margin-top: 14px; opacity: 0.6;">Site by <a href="mailto:stabwoy26@gmail.com" style="color: inherit;">Miracle</a></div>
+</footer>
+
+<script>
+  const form = document.getElementById('inquiryForm');
+  const formView = document.getElementById('formView');
+  const successView = document.getElementById('successView');
+
+  const fields = {
+    name: { el: document.getElementById('name'), validate: v => v.trim().length > 0 },
+    email: { el: document.getElementById('email'), validate: v => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v) },
+    type: { el: document.getElementById('type'), validate: v => v.trim().length > 0 },
+    date: { el: document.getElementById('date'), validate: v => v.trim().length > 0 },
+  };
+
+  form.addEventListener('submit', function(e) {
+    e.preventDefault();
+    let allValid = true;
+    for (const key in fields) {
+      const { el, validate } = fields[key];
+      const isValid = validate(el.value);
+      const errEl = document.getElementById('err-' + key);
+      if (!isValid) {
+        el.classList.add('error');
+        errEl.classList.add('show');
+        allValid = false;
+      } else {
+        el.classList.remove('error');
+        errEl.classList.remove('show');
+      }
+    }
+    if (allValid) {
+      formView.style.display = 'none';
+      successView.classList.add('show');
+    }
+  });
+</script>
+
+</body>
+</html>
